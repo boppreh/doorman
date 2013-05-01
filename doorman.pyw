@@ -8,6 +8,8 @@ full_regex = '<td>{ip}</td><td>(.*?)</td>'.format(ip=ip_regex)
 address = 'http://192.168.0.1/wlanAccess.asp'
 auth = ('', 'admin')
 
+known_hosts = {'192.168.0.12': 'paulo-mac'}
+
 computers_online = set()
 
 def get_new_computers():
@@ -21,6 +23,10 @@ def get_new_computers():
 
     response = requests.get(address, auth=auth)
     names = set(re.findall(full_regex, response.text))
+    for ip, name in names:
+        if ip in known_hosts and not name:
+            names.remove((ip, name))
+            names.add((ip, known_hosts[ip]))
 
     entered = names - computers_online
     exited = computers_online - names
@@ -58,11 +64,11 @@ if __name__ == '__main__':
         if entered:
             entered_text = ['{name} ({ip})'.format(name=name, ip=ip)
                             for ip, name in entered]
-            messages.append('Entered: ' + ', '.join(entered_text))
+            messages.append('Entered:\n\n' + '\n'.join(entered_text))
 
         if exited:
             exited_text = ['{name} ({ip})'.format(name=name, ip=ip)
                             for ip, name in exited]
-            messages.append('Exited: ' + ', '.join(exited_text))
+            messages.append('Exited:\n' + '\n'.join(exited_text))
 
         notify('Doorman', '\n'.join(messages))
