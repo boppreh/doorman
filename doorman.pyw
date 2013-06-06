@@ -64,11 +64,11 @@ if __name__ == '__main__':
         if entered:
             entered_text = ['{name} ({ip})'.format(name=name, ip=ip)
                             for ip, name in entered]
-            messages.append('Entered:\n\n' + '\n'.join(entered_text))
+            messages.append('Entered:\n' + '\n'.join(entered_text))
 
         if exited:
             exited_text = ['{name} ({ip})'.format(name=name, ip=ip)
                             for ip, name in exited]
             messages.append('Exited:\n' + '\n'.join(exited_text))
 
-        notify('Doorman', '\n'.join(messages))
+        notify('Doorman', '\n\n'.join(messages))
