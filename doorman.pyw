@@ -46,7 +46,9 @@ def show_computers_online():
 
 if __name__ == '__main__':
     from background import tray, notify
+    from simpleserver import serve
     tray('Doorman', 'computer-plus.ico', on_click=show_computers_online)
+    serve(computers_online, port=2345)
     while True:
         try:
             entered, exited = get_new_computers()
