@@ -8,7 +8,7 @@ full_regex = '<td>{ip}</td><td>(.*?)</td>'.format(ip=ip_regex)
 address = 'http://192.168.0.1/wlanAccess.asp'
 auth = ('', 'admin')
 
-known_hosts = {'192.168.0.12': 'paulo-mac'}
+known_hosts = {}
 
 computers_online = set()
 
@@ -31,7 +31,8 @@ def get_new_computers():
     entered = names - computers_online
     exited = computers_online - names
 
-    computers_online = names
+    computers_online.clear()
+    computers_online.update(names)
 
     return (entered, exited)
 
@@ -45,7 +46,7 @@ def show_computers_online():
 
 
 if __name__ == '__main__':
-    from background import tray, notify
+    from tray import tray, notify
     from simpleserver import serve
     tray('Doorman', 'computer-plus.ico', on_click=show_computers_online)
     serve(computers_online, port=2345)
